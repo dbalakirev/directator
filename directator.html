@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>directator | a websocketd example</title>
+    <style>
+      #status {
+        font: bold 0.9em arial;
+        margin: auto;
+        padding: 10px;
+      }
+      #files {
+        font: bold 1.2em arial;
+        margin: auto;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <h2>Status</h2>
+    <div id="status"></div>
+    <h2>Files</h2>
+    <div id="files"></div>
+    
+    <script>
+      var ws = new WebSocket('ws://localhost:8080/');
+      ws.onopen = function() {
+        var statusElement = document.getElementById('status');
+        statusElement.style.backgroundColor = '#cfc';
+        statusElement.textContent = 'Connected';
+      };
+      ws.onclose = function() {
+        var statusElement = document.getElementById('status');
+        statusElement.style.backgroundColor = '#fff';
+        statusElement.textContent = 'Disconnected';
+      };
+      ws.onmessage = function(event) {
+        var files = JSON.parse(event.data);
+        var txt = "<ul>"
+        for (let file of files) {
+          txt += "<li>" + file + "</li>";
+        }
+        txt += "</ul>" 
+        document.getElementById('files').innerHTML = txt;
+      };
+    </script>
+    
+  </body>
+</html>
